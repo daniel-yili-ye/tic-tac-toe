@@ -52,8 +52,9 @@ const displayController = (() => {
       gameBoard.updateBoard(piece, e.target.dataset.row, e.target.dataset.col);
       e.target.innerText = piece;
       gameController.switchPlayerTurn();
-      console.log(`${gameController.getCurrentPlayer().piece}'s turn`);
     }
+
+    // check for 3 in a row and tie
   };
   boardItems.forEach((item) =>
     item.addEventListener("click", clickHandlerItem)
