@@ -36,9 +36,45 @@ const gameController = (() => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
 
+  const checkLine = (line) => {
+    const lineSet = new Set(line);
+    if (lineSet.size == 1 && !lineSet.has("")) {
+      return true;
+    }
+  };
+
+  const checkBoard = (board) => {
+    // check rows
+    for (let i = 0; i < board.length; i++) {
+      if (checkLine(board[i])) {
+        return true;
+      }
+    }
+    // check cols
+    const transposedBoard = board[0].map((x, i) => board.map((x) => x[i]));
+    for (let i = 0; i < transposedBoard.length; i++) {
+      if (checkLine(transposedBoard[i])) {
+        return true;
+      }
+    }
+
+    // check diagonals
+    const diagOne = board.map((x, i) => x[i]);
+    if (checkLine(diagOne)) {
+      return true;
+    }
+    const diagTwo = board.map((x, i) => x[x.length - i - 1]);
+    if (checkLine(diagTwo)) {
+      return true;
+    }
+
+    return false;
+  };
+
   return {
     getCurrentPlayer,
     switchPlayerTurn,
+    checkBoard,
   };
 })();
 
@@ -55,6 +91,7 @@ const displayController = (() => {
     }
 
     // check for 3 in a row and tie
+    console.log(gameController.checkBoard(gameBoard.getBoard()));
   };
   boardItems.forEach((item) =>
     item.addEventListener("click", clickHandlerItem)
