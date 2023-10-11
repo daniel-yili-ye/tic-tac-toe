@@ -36,6 +36,19 @@ const gameController = (() => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
 
+  const resetGame = () => {
+    // reset player
+    currentPlayer = playerOne;
+
+    // reset board
+    const board = gameBoard.getBoard();
+    for (let row = 0; row < board.length; row++) {
+      for (let col = 0; col < board[row].length; col++) {
+        gameBoard.updateBoard("", row, col);
+      }
+    }
+  };
+
   const checkLine = (line) => {
     const lineSet = new Set(line);
     if (lineSet.size == 1 && !lineSet.has("")) {
@@ -74,6 +87,7 @@ const gameController = (() => {
   return {
     getCurrentPlayer,
     switchPlayerTurn,
+    resetGame,
     checkBoard,
   };
 })();
@@ -87,11 +101,19 @@ const displayController = (() => {
     if (!e.target.innerText) {
       gameBoard.updateBoard(piece, e.target.dataset.row, e.target.dataset.col);
       e.target.innerText = piece;
-      gameController.switchPlayerTurn();
-    }
 
-    // check for 3 in a row and tie
-    console.log(gameController.checkBoard(gameBoard.getBoard()));
+      // check for 3 in a row and tie
+      if (gameController.checkBoard(gameBoard.getBoard())) {
+        // declare winner
+        console.log(`${gameController.getCurrentPlayer().piece} wins!`);
+        // clear the board and switch player back to X after a win
+        gameController.resetGame();
+        // clear UI
+        boardItems.forEach((item) => (item.innerText = ""));
+      } else {
+        gameController.switchPlayerTurn();
+      }
+    }
   };
   boardItems.forEach((item) =>
     item.addEventListener("click", clickHandlerItem)

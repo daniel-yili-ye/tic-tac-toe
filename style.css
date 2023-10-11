@@ -8,7 +8,76 @@
 
 .board-item {
   background-color: white;
-  font-size: 24px;
+  font-size: 48px;
   text-align: center;
   height: 100%;
+}
+
+.container {
+  font-family: Helvetica, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+button {
+  border: none;
+}
+
+button[id="1"] {
+  border-right: solid 5px;
+  border-bottom: solid 5px;
+}
+
+button[id="2"] {
+  border-right: solid 5px;
+  border-bottom: solid 5px;
+}
+
+button[id="3"] {
+  border-bottom: solid 5px;
+}
+
+button[id="4"] {
+  border-right: solid 5px;
+  border-bottom: solid 5px;
+}
+
+button[id="5"] {
+  border-right: solid 5px;
+  border-bottom: solid 5px;
+}
+
+button[id="6"] {
+  border-bottom: solid 5px;
+}
+
+button[id="7"] {
+  border-right: solid 5px;
+}
+
+button[id="8"] {
+  border-right: solid 5px;
+}
+
+form {
+  width: 300px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-top: 5px;
+}
+
+input[type="text"] {
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+input[type="submit"] {
+  padding: 5px;
+  margin-top: 10px;
 }

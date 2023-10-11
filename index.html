@@ -11,17 +11,25 @@
 
   <body>
     <div class="container">
+      <h1>Tic Tac Toe</h1>
       <div class="board">
-        <button class="board-item" data-row="0" data-col="0"></button>
-        <button class="board-item" data-row="0" data-col="1"></button>
-        <button class="board-item" data-row="0" data-col="2"></button>
-        <button class="board-item" data-row="1" data-col="0"></button>
-        <button class="board-item" data-row="1" data-col="1"></button>
-        <button class="board-item" data-row="1" data-col="2"></button>
-        <button class="board-item" data-row="2" data-col="0"></button>
-        <button class="board-item" data-row="2" data-col="1"></button>
-        <button class="board-item" data-row="2" data-col="2"></button>
+        <button class="board-item" data-row="0" data-col="0" id="1"></button>
+        <button class="board-item" data-row="0" data-col="1" id="2"></button>
+        <button class="board-item" data-row="0" data-col="2" id="3"></button>
+        <button class="board-item" data-row="1" data-col="0" id="4"></button>
+        <button class="board-item" data-row="1" data-col="1" id="5"></button>
+        <button class="board-item" data-row="1" data-col="2" id="6"></button>
+        <button class="board-item" data-row="2" data-col="0" id="7"></button>
+        <button class="board-item" data-row="2" data-col="1" id="8"></button>
+        <button class="board-item" data-row="2" data-col="2" id="9"></button>
       </div>
+      <form class="form">
+        <label for="xname">Player X Name</label>
+        <input type="text" id="fname" />
+        <label for="oname">Player O Name</label>
+        <input type="text" id="lname" />
+        <input type="submit" value="Start" />
+      </form>
     </div>
     <script src="script.js"></script>
   </body>
