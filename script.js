@@ -20,8 +20,15 @@ const gameBoard = (() => {
 })();
 
 // factory function -> many of something
-const playerFactory = (piece) => {
-  return { piece };
+const playerFactory = (piece, name = "") => {
+  let playerName = name;
+
+  const updateName = (name) => {
+    playerName = name;
+  };
+
+  const getplayerName = () => playerName;
+  return { piece, getplayerName, updateName };
 };
 
 const gameController = (() => {
@@ -89,11 +96,23 @@ const gameController = (() => {
     switchPlayerTurn,
     resetGame,
     checkBoard,
+    playerOne,
+    playerTwo,
   };
 })();
 
 const displayController = (() => {
   const boardItems = document.querySelectorAll(".board-item");
+  const form = document.querySelector("form");
+  const xname = document.querySelector('input[id="xname"]');
+  const oname = document.querySelector('input[id="oname"]');
+
+  const restartGame = () => {
+    // clear the board and switch player back to X after a win
+    gameController.resetGame();
+    // clear UI
+    boardItems.forEach((item) => (item.innerText = ""));
+  };
 
   const clickHandlerItem = (e) => {
     const piece = gameController.getCurrentPlayer().piece;
@@ -105,11 +124,12 @@ const displayController = (() => {
       // check for 3 in a row and tie
       if (gameController.checkBoard(gameBoard.getBoard())) {
         // declare winner
-        console.log(`${gameController.getCurrentPlayer().piece} wins!`);
-        // clear the board and switch player back to X after a win
-        gameController.resetGame();
-        // clear UI
-        boardItems.forEach((item) => (item.innerText = ""));
+        alert(
+          `Player ${gameController.getCurrentPlayer().piece} - ${gameController
+            .getCurrentPlayer()
+            .getplayerName()} wins!`
+        );
+        restartGame();
       } else {
         gameController.switchPlayerTurn();
       }
@@ -118,4 +138,14 @@ const displayController = (() => {
   boardItems.forEach((item) =>
     item.addEventListener("click", clickHandlerItem)
   );
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    restartGame();
+
+    gameController.playerOne.updateName(xname.value);
+    gameController.playerTwo.updateName(oname.value);
+
+    console.log(gameController.playerOne.getplayerName());
+    console.log(gameController.playerTwo.getplayerName());
+  });
 })();
