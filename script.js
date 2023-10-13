@@ -32,8 +32,8 @@ const playerFactory = (piece, name = "") => {
 };
 
 const gameController = (() => {
-  const playerOne = playerFactory("X");
-  const playerTwo = playerFactory("O");
+  const playerOne = playerFactory("❌");
+  const playerTwo = playerFactory("⭕");
 
   let currentPlayer = playerOne;
 
@@ -124,12 +124,14 @@ const displayController = (() => {
       // check for 3 in a row and tie
       if (gameController.checkBoard(gameBoard.getBoard())) {
         // declare winner
-        alert(
-          `Player ${gameController.getCurrentPlayer().piece} - ${gameController
-            .getCurrentPlayer()
-            .getplayerName()} wins!`
-        );
-        restartGame();
+        setTimeout(() => {
+          alert(
+            `Player ${
+              gameController.getCurrentPlayer().piece
+            } - ${gameController.getCurrentPlayer().getplayerName()} wins!`
+          );
+          restartGame();
+        }, 1);
       } else {
         gameController.switchPlayerTurn();
       }
