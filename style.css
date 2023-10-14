@@ -1,3 +1,14 @@
+* {
+  font-family: "Lucida Console", monospace;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
@@ -11,14 +22,6 @@
   font-size: 75px;
   text-align: center;
   height: 100%;
-}
-
-.container {
-  font-family: Helvetica, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 
 button {
@@ -68,16 +71,33 @@ form {
   flex-direction: column;
 }
 
-input {
-  margin-top: 5px;
-}
-
 input[type="text"] {
   padding: 5px;
   margin-bottom: 10px;
 }
 
+input[type="radio"] {
+  margin-top: 0;
+  margin-right: 5px;
+}
+
+.human {
+  margin-left: 0;
+}
+
+.bot {
+  margin-left: 20px;
+}
+
 input[type="submit"] {
   padding: 5px;
   margin-top: 10px;
+}
+
+.xoradio {
+  display: flex;
+}
+
+.name {
+  font-weight: bold;
 }

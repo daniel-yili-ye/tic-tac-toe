@@ -24,9 +24,36 @@
         <button class="board-item" data-row="2" data-col="2" id="9"></button>
       </div>
       <form>
-        <label for="xname">Player X Name</label>
+        <label for="xname" class="name">Player X Name</label>
+        <div class="xoradio">
+          <input
+            type="radio"
+            id="xhuman"
+            value="Human"
+            class="human"
+            name="xradio"
+            checked
+          />
+          <label for="Human">Human 🧑</label>
+          <input type="radio" id="xbot" value="Bot" class="bot" name="xradio" />
+          <label for="bot">Bot 🤖</label>
+        </div>
         <input type="text" id="xname" />
-        <label for="oname">Player O Name</label>
+
+        <label for="oname" class="name">Player O Name</label>
+        <div class="xoradio">
+          <input
+            type="radio"
+            id="ohuman"
+            value="Human"
+            class="human"
+            name="oradio"
+            checked
+          />
+          <label for="Human">Human 🧑</label>
+          <input type="radio" id="obot" value="Bot" class="bot" name="oradio" />
+          <label for="bot">Bot 🤖</label>
+        </div>
         <input type="text" id="oname" />
         <input type="submit" value="Start" />
       </form>

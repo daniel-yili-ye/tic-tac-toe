@@ -113,6 +113,9 @@ const displayController = (() => {
   const xname = document.querySelector('input[id="xname"]');
   const oname = document.querySelector('input[id="oname"]');
 
+  // radio inputs
+  const radioItems = document.querySelectorAll("input[type='radio']");
+
   const restartGame = () => {
     // clear the board and switch player back to X after a win
     gameController.resetGame();
@@ -168,4 +171,7 @@ const displayController = (() => {
     console.log(gameController.playerOne.getplayerName());
     console.log(gameController.playerTwo.getplayerName());
   });
+  radioItems.forEach((item) =>
+    item.addEventListener("click", (e) => (e.target.checked = true))
+  );
 })();
