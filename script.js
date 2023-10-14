@@ -6,6 +6,12 @@ const gameBoard = (() => {
     ["", "", ""],
   ];
 
+  const boards = [
+    ["x", "o", "x"],
+    ["x", "o", "x"],
+    ["x", "o", "x"],
+  ];
+
   // gives only read access to board
   const getBoard = () => board;
 
@@ -121,7 +127,7 @@ const displayController = (() => {
       gameBoard.updateBoard(piece, e.target.dataset.row, e.target.dataset.col);
       e.target.innerText = piece;
 
-      // check for 3 in a row and tie
+      // check for 3 in a row
       if (gameController.checkBoard(gameBoard.getBoard())) {
         // declare winner
         setTimeout(() => {
@@ -130,6 +136,18 @@ const displayController = (() => {
               gameController.getCurrentPlayer().piece
             } - ${gameController.getCurrentPlayer().getplayerName()} wins!`
           );
+          restartGame();
+        }, 1);
+      }
+      // check for tie
+      else if (
+        gameBoard
+          .getBoard()
+          .flat()
+          .filter((x) => x == "").length == 0
+      ) {
+        setTimeout(() => {
+          alert(`It's a tie 👔!`);
           restartGame();
         }, 1);
       } else {
