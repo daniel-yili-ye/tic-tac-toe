@@ -20,7 +20,7 @@ const gameBoard = (() => {
 })();
 
 // factory function -> many of something
-const playerFactory = (piece, name = "", type = "") => {
+const playerFactory = (piece, name = "", type = "human") => {
   let playerPiece = piece;
   let playerName = name;
   let playerType = type;
@@ -131,7 +131,8 @@ const displayController = (() => {
   };
 
   const clickHandlerItem = (e) => {
-    const piece = gameController.getCurrentPlayer().piece;
+    const piece = gameController.getCurrentPlayer().getPlayerPiece();
+    console.log(gameController.getCurrentPlayer().getPlayerName());
 
     if (!e.target.innerText) {
       gameBoard.updateBoard(piece, e.target.dataset.row, e.target.dataset.col);
@@ -143,9 +144,11 @@ const displayController = (() => {
         // declare winner
         setTimeout(() => {
           alert(
-            `Player ${
-              gameController.getCurrentPlayer().piece
-            } - ${gameController.getCurrentPlayer().getPlayerName()} wins!`
+            `Player ${gameController
+              .getCurrentPlayer()
+              .getPlayerPiece()} - ${gameController
+              .getCurrentPlayer()
+              .getPlayerName()} wins!`
           );
           confetti.start();
           setTimeout(() => {
