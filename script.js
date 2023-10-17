@@ -6,12 +6,6 @@ const gameBoard = (() => {
     ["", "", ""],
   ];
 
-  const boards = [
-    ["x", "o", "x"],
-    ["x", "o", "x"],
-    ["x", "o", "x"],
-  ];
-
   // gives only read access to board
   const getBoard = () => board;
 
@@ -26,15 +20,30 @@ const gameBoard = (() => {
 })();
 
 // factory function -> many of something
-const playerFactory = (piece, name = "") => {
+const playerFactory = (piece, name = "", type = "") => {
+  let playerPiece = piece;
   let playerName = name;
+  let playerType = type;
+
+  const getPlayerPiece = () => playerPiece;
+  const getPlayerName = () => playerName;
+  const getPlayerType = () => playerType;
 
   const updateName = (name) => {
     playerName = name;
   };
 
-  const getplayerName = () => playerName;
-  return { piece, getplayerName, updateName };
+  const updatePlayerType = (type) => {
+    playerType = type;
+  };
+
+  return {
+    getPlayerPiece,
+    getPlayerName,
+    getPlayerType,
+    updateName,
+    updatePlayerType,
+  };
 };
 
 const gameController = (() => {
@@ -110,8 +119,6 @@ const gameController = (() => {
 const displayController = (() => {
   const boardItems = document.querySelectorAll(".board-item");
   const form = document.querySelector("form");
-  const xname = document.querySelector('input[id="xname"]');
-  const oname = document.querySelector('input[id="oname"]');
 
   // radio inputs
   const radioItems = document.querySelectorAll("input[type='radio']");
@@ -129,6 +136,7 @@ const displayController = (() => {
     if (!e.target.innerText) {
       gameBoard.updateBoard(piece, e.target.dataset.row, e.target.dataset.col);
       e.target.innerText = piece;
+      const timeOut = 1;
 
       // check for 3 in a row
       if (gameController.checkBoard(gameBoard.getBoard())) {
@@ -137,10 +145,14 @@ const displayController = (() => {
           alert(
             `Player ${
               gameController.getCurrentPlayer().piece
-            } - ${gameController.getCurrentPlayer().getplayerName()} wins!`
+            } - ${gameController.getCurrentPlayer().getPlayerName()} wins!`
           );
+          confetti.start();
+          setTimeout(() => {
+            confetti.stop();
+          }, 1000);
           restartGame();
-        }, 1);
+        }, timeOut);
       }
       // check for tie
       else if (
@@ -152,25 +164,31 @@ const displayController = (() => {
         setTimeout(() => {
           alert(`It's a tie 👔!`);
           restartGame();
-        }, 1);
+        }, timeOut);
       } else {
         gameController.switchPlayerTurn();
+        // let other player
       }
     }
   };
+
   boardItems.forEach((item) =>
     item.addEventListener("click", clickHandlerItem)
   );
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     restartGame();
 
-    gameController.playerOne.updateName(xname.value);
-    gameController.playerTwo.updateName(oname.value);
+    const formData = new FormData(e.target);
 
-    console.log(gameController.playerOne.getplayerName());
-    console.log(gameController.playerTwo.getplayerName());
+    gameController.playerOne.updateName(formData.get("xname"));
+    gameController.playerTwo.updateName(formData.get("oname"));
+
+    gameController.playerOne.updatePlayerType(formData.get("xradio"));
+    gameController.playerTwo.updatePlayerType(formData.get("oradio"));
   });
+
   radioItems.forEach((item) =>
     item.addEventListener("click", (e) => (e.target.checked = true))
   );
