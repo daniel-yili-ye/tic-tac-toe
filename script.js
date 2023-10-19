@@ -37,12 +37,33 @@ const playerFactory = (piece, name = "", type = "human") => {
     playerType = type;
   };
 
+  const playOptimalMove = () => {
+    if (getPlayerType() === "bot") {
+      const board = gameBoard.getBoard();
+      const moves = [];
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+          if (board[i][j] === "") {
+            moves.push([i, j]);
+          }
+        }
+      }
+      const [i, j] = moves[Math.floor(Math.random() * moves.length)];
+      setTimeout(() => {
+        document
+          .querySelector(`button[data-row='${i}'][data-col='${j}']`)
+          .click();
+      }, 100);
+    }
+  };
+
   return {
     getPlayerPiece,
     getPlayerName,
     getPlayerType,
     updateName,
     updatePlayerType,
+    playOptimalMove,
   };
 };
 
@@ -128,11 +149,12 @@ const displayController = (() => {
     gameController.resetGame();
     // clear UI
     boardItems.forEach((item) => (item.innerText = ""));
+    // play optimal move
+    gameController.getCurrentPlayer().playOptimalMove();
   };
 
   const clickHandlerItem = (e) => {
     const piece = gameController.getCurrentPlayer().getPlayerPiece();
-    console.log(gameController.getCurrentPlayer().getPlayerName());
 
     if (!e.target.innerText) {
       gameBoard.updateBoard(piece, e.target.dataset.row, e.target.dataset.col);
@@ -170,7 +192,8 @@ const displayController = (() => {
         }, timeOut);
       } else {
         gameController.switchPlayerTurn();
-        // let other player
+        // play optimal move
+        gameController.getCurrentPlayer().playOptimalMove();
       }
     }
   };
@@ -181,7 +204,6 @@ const displayController = (() => {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    restartGame();
 
     const formData = new FormData(e.target);
 
@@ -190,6 +212,8 @@ const displayController = (() => {
 
     gameController.playerOne.updatePlayerType(formData.get("xradio"));
     gameController.playerTwo.updatePlayerType(formData.get("oradio"));
+
+    restartGame();
   });
 
   radioItems.forEach((item) =>
