@@ -10,9 +10,9 @@
 }
 
 .board {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: repeat(3, 100px);
+  display: none;
+  grid-template-columns: repeat(3, 10em);
+  grid-template-rows: repeat(3, 10em);
   justify-content: center;
   align-items: center;
 }
@@ -65,7 +65,7 @@ button[id="8"] {
 }
 
 form {
-  width: 300px;
+  width: 35em;
   padding: 25px;
   display: flex;
   flex-direction: column;
@@ -92,6 +92,7 @@ input[type="radio"] {
 input[type="submit"] {
   padding: 5px;
   margin-top: 10px;
+  border: solid;
 }
 
 .xoradio {
@@ -100,4 +101,12 @@ input[type="submit"] {
 
 .name {
   font-weight: bold;
+}
+
+button[id="back"] {
+  display: none;
+  padding: 5px;
+  margin-top: 50px;
+  border: solid;
+  justify-content: center;
 }

@@ -139,7 +139,9 @@ const gameController = (() => {
 
 const displayController = (() => {
   const boardItems = document.querySelectorAll(".board-item");
-  const form = document.querySelector("form");
+  const form = document.querySelector("form[id='form']");
+  const board = document.querySelector(".board");
+  const back = document.querySelector("button[id='back']");
 
   // radio inputs
   const radioItems = document.querySelectorAll("input[type='radio']");
@@ -205,6 +207,10 @@ const displayController = (() => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    board.style.display = "grid";
+    form.style.display = "none";
+    back.style.display = "flex";
+
     const formData = new FormData(e.target);
 
     gameController.playerOne.updateName(formData.get("xname"));
@@ -219,4 +225,10 @@ const displayController = (() => {
   radioItems.forEach((item) =>
     item.addEventListener("click", (e) => (e.target.checked = true))
   );
+
+  back.addEventListener("click", (e) => {
+    board.style.display = "none";
+    form.style.display = "";
+    back.style.display = "none";
+  });
 })();
