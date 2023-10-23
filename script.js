@@ -38,20 +38,68 @@ const playerFactory = (piece, name = "", type = "human") => {
   };
 
   const playOptimalMove = () => {
-    if (getPlayerType() === "bot") {
-      const board = gameBoard.getBoard();
-      const moves = [];
-      for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board.length; j++) {
-          if (board[i][j] === "") {
-            moves.push([i, j]);
+    const score = {
+      "❌": 1,
+      "⭕": -1,
+      tie: 0,
+    };
+
+    const minmax = (board, isMaximizing) => {
+      // check for win condition
+      let result = gameController.checkBoard(gameBoard.getBoard());
+      if (result) {
+        return score[result];
+      }
+
+      if (isMaximizing) {
+        let maxScore = -Infinity;
+        for (let i = 0; i < board.length; i++) {
+          for (let j = 0; j < board.length; j++) {
+            if (board[i][j] === "") {
+              board[i][j] = getPlayerPiece();
+              let score = minmax(board, false);
+              board[i][j] = "";
+              maxScore = max(score, maxScore);
+            }
+          }
+        }
+        return maxScore;
+      } else {
+        let minScore = Infinity;
+        for (let i = 0; i < board.length; i++) {
+          for (let j = 0; j < board.length; j++) {
+            if (board[i][j] === "") {
+              board[i][j] = getPlayerPiece();
+              let score = minmax(board, true);
+              board[i][j] = "";
+              minScore = min(score, minScore);
+            }
           }
         }
       }
-      const [i, j] = moves[Math.floor(Math.random() * moves.length)];
+    };
+
+    if (getPlayerType() === "bot") {
+      const board = gameBoard.getBoard();
+      let maxScore = -Infinity;
+      let move;
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board.length; j++) {
+          if (board[i][j] === "") {
+            board[i][j] = getPlayerPiece();
+            const isMaximizing = getPlayerPiece() === "❌" ? false : true;
+            let score = minmax(board, isMaximizing);
+            board[i][j] = "";
+            if (score > maxScore) {
+              maxScore = score;
+              move = { i, j };
+            }
+          }
+        }
+      }
       setTimeout(() => {
         document
-          .querySelector(`button[data-row='${i}'][data-col='${j}']`)
+          .querySelector(`button[data-row='${move.i}'][data-col='${move.j}']`)
           .click();
       }, 100);
     }
@@ -100,31 +148,44 @@ const gameController = (() => {
   };
 
   const checkBoard = (board) => {
+    let winner = null;
+    const piece = gameController.getCurrentPlayer().getPlayerPiece();
+
     // check rows
     for (let i = 0; i < board.length; i++) {
       if (checkLine(board[i])) {
-        return true;
+        winner = piece;
       }
     }
     // check cols
     const transposedBoard = board[0].map((x, i) => board.map((x) => x[i]));
     for (let i = 0; i < transposedBoard.length; i++) {
       if (checkLine(transposedBoard[i])) {
-        return true;
+        winner = piece;
       }
     }
 
     // check diagonals
     const diagOne = board.map((x, i) => x[i]);
     if (checkLine(diagOne)) {
-      return true;
+      winner = piece;
     }
     const diagTwo = board.map((x, i) => x[x.length - i - 1]);
     if (checkLine(diagTwo)) {
-      return true;
+      winner = piece;
     }
 
-    return false;
+    // tie check
+    if (
+      gameBoard
+        .getBoard()
+        .flat()
+        .filter((x) => x == "").length == 0
+    ) {
+      winner = "tie";
+    }
+
+    return winner;
   };
 
   return {
@@ -164,13 +225,11 @@ const displayController = (() => {
       const timeOut = 1;
 
       // check for 3 in a row
-      if (gameController.checkBoard(gameBoard.getBoard())) {
+      if (gameController.checkBoard(gameBoard.getBoard()) === piece) {
         // declare winner
         setTimeout(() => {
           alert(
-            `Player ${gameController
-              .getCurrentPlayer()
-              .getPlayerPiece()} - ${gameController
+            `Player ${piece} - ${gameController
               .getCurrentPlayer()
               .getPlayerName()} wins!`
           );
@@ -182,12 +241,7 @@ const displayController = (() => {
         }, timeOut);
       }
       // check for tie
-      else if (
-        gameBoard
-          .getBoard()
-          .flat()
-          .filter((x) => x == "").length == 0
-      ) {
+      else if (gameController.checkBoard(gameBoard.getBoard()) === "tie") {
         setTimeout(() => {
           alert(`It's a tie 👔!`);
           restartGame();
