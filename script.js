@@ -56,10 +56,10 @@ const playerFactory = (piece, name = "", type = "human") => {
         for (let i = 0; i < board.length; i++) {
           for (let j = 0; j < board.length; j++) {
             if (board[i][j] === "") {
-              board[i][j] = getPlayerPiece();
+              board[i][j] = "⭕";
               let score = minmax(board, false);
               board[i][j] = "";
-              maxScore = max(score, maxScore);
+              maxScore = Math.max(score, maxScore);
             }
           }
         }
@@ -69,31 +69,34 @@ const playerFactory = (piece, name = "", type = "human") => {
         for (let i = 0; i < board.length; i++) {
           for (let j = 0; j < board.length; j++) {
             if (board[i][j] === "") {
-              board[i][j] = getPlayerPiece();
+              board[i][j] = "❌";
               let score = minmax(board, true);
               board[i][j] = "";
-              minScore = min(score, minScore);
+              minScore = Math.min(score, minScore);
             }
           }
         }
+        return minScore;
       }
     };
 
     if (getPlayerType() === "bot") {
       const board = gameBoard.getBoard();
-      let maxScore = -Infinity;
+      let minScore = Infinity;
       let move;
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board.length; j++) {
           if (board[i][j] === "") {
+            const isMaximizing = getPlayerPiece() === "❌" ? true : false;
+            console.log(isMaximizing);
             board[i][j] = getPlayerPiece();
-            const isMaximizing = getPlayerPiece() === "❌" ? false : true;
             let score = minmax(board, isMaximizing);
             board[i][j] = "";
-            if (score > maxScore) {
-              maxScore = score;
+            if (score < minScore) {
+              minScore = score;
               move = { i, j };
             }
+            console.log(i, j, score, minScore);
           }
         }
       }
