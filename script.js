@@ -46,7 +46,7 @@ const playerFactory = (piece, name = "", type = "human") => {
 
     const minmax = (board, isMaximizing) => {
       // check for win condition
-      let result = gameController.checkBoard(gameBoard.getBoard());
+      let result = gameController.checkBoard(board);
       if (result) {
         return score[result];
       }
@@ -84,11 +84,10 @@ const playerFactory = (piece, name = "", type = "human") => {
       const board = gameBoard.getBoard();
       let minScore = Infinity;
       let move;
+      const isMaximizing = getPlayerPiece() === "❌" ? true : false;
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board.length; j++) {
           if (board[i][j] === "") {
-            const isMaximizing = getPlayerPiece() === "❌" ? true : false;
-            console.log(isMaximizing);
             board[i][j] = getPlayerPiece();
             let score = minmax(board, isMaximizing);
             board[i][j] = "";
@@ -146,13 +145,12 @@ const gameController = (() => {
   const checkLine = (line) => {
     const lineSet = new Set(line);
     if (lineSet.size == 1 && !lineSet.has("")) {
-      return true;
+      return lineSet.values().next().value;
     }
   };
 
   const checkBoard = (board) => {
     let winner = null;
-    const piece = gameController.getCurrentPlayer().getPlayerPiece();
 
     // check rows
     for (let i = 0; i < board.length; i++) {
