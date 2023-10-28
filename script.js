@@ -56,7 +56,7 @@ const playerFactory = (piece, name = "", type = "human") => {
         for (let i = 0; i < board.length; i++) {
           for (let j = 0; j < board.length; j++) {
             if (board[i][j] === "") {
-              board[i][j] = "⭕";
+              board[i][j] = "❌";
               let score = minmax(board, false);
               board[i][j] = "";
               maxScore = Math.max(score, maxScore);
@@ -69,7 +69,7 @@ const playerFactory = (piece, name = "", type = "human") => {
         for (let i = 0; i < board.length; i++) {
           for (let j = 0; j < board.length; j++) {
             if (board[i][j] === "") {
-              board[i][j] = "❌";
+              board[i][j] = "⭕";
               let score = minmax(board, true);
               board[i][j] = "";
               minScore = Math.min(score, minScore);
@@ -82,20 +82,30 @@ const playerFactory = (piece, name = "", type = "human") => {
 
     if (getPlayerType() === "bot") {
       const board = gameBoard.getBoard();
-      let minScore = Infinity;
+      const piece = getPlayerPiece();
+      let bestScore = piece === "❌" ? -Infinity : Infinity;
+      let isMaximizing = piece === "❌" ? false : true;
       let move;
-      const isMaximizing = getPlayerPiece() === "❌" ? true : false;
+      console.log(getPlayerPiece());
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board.length; j++) {
           if (board[i][j] === "") {
             board[i][j] = getPlayerPiece();
             let score = minmax(board, isMaximizing);
             board[i][j] = "";
-            if (score < minScore) {
-              minScore = score;
-              move = { i, j };
+
+            if (piece === "❌") {
+              if (score > bestScore) {
+                bestScore = score;
+                move = { i, j };
+              }
+            } else {
+              if (score < bestScore) {
+                bestScore = score;
+                move = { i, j };
+              }
             }
-            console.log(i, j, score, minScore);
+            console.log(i, j, score, bestScore);
           }
         }
       }
@@ -150,30 +160,35 @@ const gameController = (() => {
   };
 
   const checkBoard = (board) => {
-    let winner = null;
+    let winner;
 
     // check rows
     for (let i = 0; i < board.length; i++) {
-      if (checkLine(board[i])) {
-        winner = piece;
+      winner = checkLine(board[i]);
+      if (winner) {
+        return winner;
       }
     }
     // check cols
     const transposedBoard = board[0].map((x, i) => board.map((x) => x[i]));
     for (let i = 0; i < transposedBoard.length; i++) {
-      if (checkLine(transposedBoard[i])) {
-        winner = piece;
+      winner = checkLine(transposedBoard[i]);
+      if (winner) {
+        return winner;
       }
     }
 
     // check diagonals
     const diagOne = board.map((x, i) => x[i]);
-    if (checkLine(diagOne)) {
-      winner = piece;
+    winner = checkLine(diagOne);
+    if (winner) {
+      return winner;
     }
+
     const diagTwo = board.map((x, i) => x[x.length - i - 1]);
-    if (checkLine(diagTwo)) {
-      winner = piece;
+    winner = checkLine(diagTwo);
+    if (winner) {
+      return winner;
     }
 
     // tie check
@@ -183,7 +198,7 @@ const gameController = (() => {
         .flat()
         .filter((x) => x == "").length == 0
     ) {
-      winner = "tie";
+      return "tie";
     }
 
     return winner;
